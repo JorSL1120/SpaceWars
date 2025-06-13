@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
     private int _currentHealth; // Vidas actuales del jugador
     private float _proximoDisparo; //Cuando sale el proximo disparo
 
+    public AudioClip blasterShoot;
+
     void Start()
     {
         _currentHealth = MaxHealth; // Al inicio, el jugador tiene el máximo de vidas
@@ -57,6 +59,8 @@ public class Player : MonoBehaviour
     void Disparar()
     {
         Instantiate(BalaPrefab, PuntoDisparo.position, Quaternion.identity);
+
+        AudioSource.PlayClipAtPoint(blasterShoot, transform.position);
     }
 
     void OnTriggerEnter2D(Collider2D other)
