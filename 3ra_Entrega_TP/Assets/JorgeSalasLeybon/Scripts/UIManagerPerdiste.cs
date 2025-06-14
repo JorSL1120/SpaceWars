@@ -10,7 +10,7 @@ public class UIManagerPerdiste : MonoBehaviour
     
     void Start()
     {
-        ScoreText.text = "Tu Puntuación: " + ScoreManager._score; //Llama a la variable del score logrado en la partida
+        ScoreText.text = "Your score: " + ScoreManager._score; //Llama a la variable del score logrado en la partida
     }
 
     // Método para cargar la escena "SampleScene"
