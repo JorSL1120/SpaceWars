@@ -21,7 +21,19 @@ public class Player : MonoBehaviour
 
     public AudioClip blasterShoot;
 
+
+
     private float inputMovil = 0f; //  Entrada de botones móviles
+
+    bool IsMobileBrowser()
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+    string ua = Application.absoluteURL;
+    return ua.Contains("android") || ua.Contains("iphone") || ua.Contains("ipad");
+#else
+        return false;
+#endif
+    }
 
     void Start()
     {
@@ -54,14 +66,13 @@ public class Player : MonoBehaviour
 
     void Shooting()
     {
-        // Solo si no es plataforma móvil
-    #if !UNITY_WEBGL || UNITY_EDITOR
+        if (IsMobileBrowser()) return; // Bloquea el disparo si es navegador móvil
+
         if (Time.time > _proximoDisparo && Input.GetButton("Fire1")) //Disparo
         {
             Disparar();
             _proximoDisparo = Time.time + CadenciaDisparo;
         }
-    #endif
     }
 
     //Crea la bala en el Empty
