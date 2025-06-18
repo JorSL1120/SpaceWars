@@ -54,12 +54,14 @@ public class Player : MonoBehaviour
 
     void Shooting()
     {
-        //Disparo
-        if (Time.time > _proximoDisparo && Input.GetButton("Fire1"))
+        // Solo si no es plataforma móvil
+    #if !UNITY_WEBGL || UNITY_EDITOR
+        if (Time.time > _proximoDisparo && Input.GetButton("Fire1")) //Disparo
         {
             Disparar();
             _proximoDisparo = Time.time + CadenciaDisparo;
         }
+    #endif
     }
 
     //Crea la bala en el Empty
