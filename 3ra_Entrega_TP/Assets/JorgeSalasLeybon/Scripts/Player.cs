@@ -21,6 +21,8 @@ public class Player : MonoBehaviour
 
     public AudioClip blasterShoot;
 
+    private float inputMovil = 0f; //  Entrada de botones móviles
+
     void Start()
     {
         _currentHealth = MaxHealth; // Al inicio, el jugador tiene el máximo de vidas
@@ -37,7 +39,12 @@ public class Player : MonoBehaviour
     {
         //Movimiento Horizontal
         float _movimientoHorizontal = Input.GetAxis("Horizontal");
-        transform.Translate(Vector3.right * _movimientoHorizontal * VelocidadMovimiento * Time.deltaTime);
+
+        // Movimiento total = teclado + botones moviles
+        float _movimientoTotal = _movimientoHorizontal + inputMovil;
+
+        transform.Translate(Vector3.right * _movimientoTotal * VelocidadMovimiento * Time.deltaTime);
+        //transform.Translate(Vector3.right * _movimientoHorizontal * VelocidadMovimiento * Time.deltaTime);
 
         //Limitar el movimiento dentro de los limites
         Vector3 _posicionActual = transform.position;
@@ -113,6 +120,20 @@ public class Player : MonoBehaviour
         {
             _currentHealth++; // Añadir una vida
             UpdateHealthUI(); // Actualizar la visualización de las vidas en el Canvas
+        }
+    }
+
+    // MÉTODOS PARA LOS BOTONES DE MÓVIL 
+    public void MoverIzquierda() => inputMovil = -1f;
+    public void MoverDerecha() => inputMovil = 1f;
+    public void DetenerMovimiento() => inputMovil = 0f;
+
+    public void DisparoMovil()
+    {
+        if (Time.time > _proximoDisparo)
+        {
+            Disparar();
+            _proximoDisparo = Time.time + CadenciaDisparo;
         }
     }
 }
