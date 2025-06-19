@@ -4,6 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+using System.Runtime.InteropServices;
+#endif
+
 public class Player : MonoBehaviour
 {
     public float VelocidadMovimiento; //Velocidad en la que se desplaza el player
@@ -22,23 +26,26 @@ public class Player : MonoBehaviour
     public AudioClip blasterShoot;
 
 
-
+    // Cosas agregadas para lo de celular
     private float inputMovil = 0f; //  Entrada de botones móviles
 
-    bool IsMobileBrowser()
-    {
-#if UNITY_WEBGL && !UNITY_EDITOR
-    string ua = Application.absoluteURL;
-    return ua.Contains("android") || ua.Contains("iphone") || ua.Contains("ipad");
-#else
-        return false;
-#endif
-    }
+    #if UNITY_WEBGL && !UNITY_EDITOR
+    [DllImport("__Internal")]
+    private static extern int IsMobileDevice();
+    #endif
+
+    private bool isMobile = false;
 
     void Start()
     {
         _currentHealth = MaxHealth; // Al inicio, el jugador tiene el máximo de vidas
         UpdateHealthUI(); //Se llama al metodo que actualiza la vida en el canvas
+
+    #if UNITY_WEBGL && !UNITY_EDITOR
+        isMobile = IsMobileDevice() == 1;
+    #else
+        isMobile = Application.isMobilePlatform;
+    #endif
     }
 
     void Update()
@@ -66,7 +73,7 @@ public class Player : MonoBehaviour
 
     void Shooting()
     {
-        if (IsMobileBrowser()) return; // Bloquea el disparo si es navegador móvil
+        if (isMobile) return; //  No disparar automáticamente en móviles
 
         if (Time.time > _proximoDisparo && Input.GetButton("Fire1")) //Disparo
         {
